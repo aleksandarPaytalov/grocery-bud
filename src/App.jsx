@@ -3,8 +3,25 @@ import Form from "./Form";
 import { nanoid } from "nanoid";
 import Items from "./Items";
 
+const setLocalStorage = (items) => {
+  localStorage.setItem("list", JSON.stringify(items));
+};
+
+// const getLocalStorage = () => {
+//   let list = localStorage.getItem("list");
+//   if (list) {
+//     list = JSON.parse(localStorage.getItem("list"));
+//   } else {
+//     list = "[]";
+//   }
+
+//   return list;
+// };
+
+let defaultList = JSON.parse(localStorage.getItem("list") || "[]");
+
 const App = () => {
-  const [items, setItems] = useState([]);
+  const [items, setItems] = useState(defaultList);
 
   const addItem = (newItemName) => {
     const newItem = {
@@ -12,14 +29,16 @@ const App = () => {
       completed: false,
       id: nanoid(),
     };
-
-    setItems([...items, newItem]);
+    const newListItems = [...items, newItem];
+    setItems(newListItems);
+    setLocalStorage(newListItems);
   };
 
   const removeItem = (id) => {
     const newList = items.filter((i) => i.id !== id);
 
     setItems(newList);
+    setLocalStorage(newList);
   };
 
   return (
